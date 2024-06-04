@@ -12,17 +12,23 @@ documentation = "https://github.com/rohitjoshi/iso8583/blob/master/README.md"
 keywords = ["iso8583", "encoding", "decoding", "protocol"]
 categories = ["encoding"]
 readme = "README.md"
-include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
+include = [
+    "Cargo.toml",
+    "src/**/*.rs",
+    "README.md",
+    "LICENSE-APACHE",
+    "LICENSE-MIT",
+]
 
 [badges]
 travis-ci = { repository = "rohitjoshi/iso8583", branch = "master" }
 codecov = { repository = "rohitjoshi/iso8583", branch = "master", service = "github" }
 
 [dependencies]
-log = "0.3.8"
-bit-array="0.4.4"
-typenum= "1.9.0"
-yaml-rust="0.4.0"
-serde = "1.0"
-serde_derive = "1.0"
-serde_yaml = "0.7"
+log = "0.4.21"
+bit-array = "0.4.4"
+typenum = "1.17.0"
+yaml-rust = "0.4.5"
+serde = "1.0.203"
+serde_derive = "1.0.203"
+serde_yaml = "0.9.33"
