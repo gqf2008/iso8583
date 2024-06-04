@@ -25,9 +25,9 @@ impl IsoSpecs for YamlSpec {
 }
 
 impl YamlSpec {
-    pub fn new(yaml_string: &String) -> Result<YamlSpec, String> {
-        let handle = try!(YamlSpec::from_string(yaml_string));
-        Ok(YamlSpec { handle: handle })
+    pub fn new<S: AsRef<str>>(yaml_string: S) -> anyhow::Result<YamlSpec> {
+        let handle = YamlSpec::from_string(yaml_string)?;
+        Ok(YamlSpec { handle })
     }
     /*
     pub label: String,
@@ -55,11 +55,11 @@ impl YamlSpec {
         return serde_yaml::to_string(&btmap).unwrap();
     }
 
-    fn from_string(yaml_string: &str) -> Result<Vec<IsoField>, String> {
+    fn from_string<S: AsRef<str>>(yaml_string: S) -> anyhow::Result<Vec<IsoField>> {
         let fields: BTreeMap<usize, HashMap<String, String>> =
-            match serde_yaml::from_str(&yaml_string) {
+            match serde_yaml::from_str(yaml_string.as_ref()) {
                 Err(e) => {
-                    return Err(format!(
+                    return Err(anyhow::anyhow!(
                         "Failed to parse yaml file. Err: {} ",
                         e.to_string()
                     ));
@@ -81,21 +81,33 @@ impl YamlSpec {
                 } else if a == "ContentType" {
                     let c = FieldCharType::from_str(b);
                     if c.is_none() {
-                        return Err(format!("Invalid ContentType {} for Index {}", b, index));
+                        return Err(anyhow::anyhow!(
+                            "Invalid ContentType {} for Index {}",
+                            b,
+                            index
+                        ));
                     } else {
                         char_type = c.unwrap();
                     }
                 } else if a == "LengthType" || a == "LenType" {
                     let lt = FieldSizeType::from_str(b);
                     if lt.is_none() {
-                        return Err(format!("Invalid LengthType {} for Index {}", b, index));
+                        return Err(anyhow::anyhow!(
+                            "Invalid LengthType {} for Index {}",
+                            b,
+                            index
+                        ));
                     } else {
                         length_type = lt.unwrap();
                     }
                 } else if a == "Length" || a == "MaxLen" {
                     let l = b.parse();
                     if l.is_err() {
-                        return Err(format!("Invalid Length/MaxLen {} for Index {}", b, index));
+                        return Err(anyhow::anyhow!(
+                            "Invalid Length/MaxLen {} for Index {}",
+                            b,
+                            index
+                        ));
                     } else {
                         field_length = l.unwrap();
                     }
