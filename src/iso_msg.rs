@@ -92,12 +92,7 @@ impl<'a, 'b> IsoMsg<'a, 'b> {
     }
 
     pub fn get_field(&self, index: usize, buffer: &mut [u8]) -> anyhow::Result<usize> {
-        let res = self.get_field_raw(index, buffer);
-        if res.is_err() {
-            return Err(res.err().unwrap());
-        }
-
-        let (len, field_len_prefix) = res.unwrap();
+        let (len, field_len_prefix) = self.get_field_raw(index, buffer)?;
         if field_len_prefix > 0 {
             let temp_buff = buffer[field_len_prefix..len].to_vec();
             buffer[0..len - field_len_prefix].copy_from_slice(&temp_buff[..]);
